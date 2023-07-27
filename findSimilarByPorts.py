@@ -46,23 +46,33 @@ for ports, devices in ports_devices_list.items():
         for device in devices:
             print(device)
         print('---')
-
+"""
 df = pd.DataFrame(ports_devices_list.items(), columns=['ports', 'ips']) 
 df['ips'] = df['ips'].apply(lambda x: ';'.join(x))
 df.to_excel("same_ports_devices.xlsx", index=False)
-
+"""
 print("################# Similar Ports Devices:")
 
-def isWeakSimilar(portsA, portsB, bar_value=6):
+def isWeakSimilar(portsA, portsB, bar_key=6):
+
     #这里传进来的portsA, portsB是字符串，要转化回列表
     portsA = portsA.split(",")
     portsB = portsB.split(",")
 
-    if (abs(len(portsA) - len(portsB))) > (max(len(portsA), len(portsB)) / bar_value):
+    #设置bar
+    bar_value = max(len(portsA), len(portsB)) / bar_key
+
+    #1和0的直接认为不相似
+    if (max(len(portsA), len(portsB))) == 1 and (min(len(portsA), len(portsB)) == 0):
+        return False
+
+    #端口数量差距大于bar的认为不相似
+    if (abs(len(portsA) - len(portsB))) > bar_value:
         return False
     
+    #不相同端口数量差距大于bar的认为不相似
     common_ports = set(portsA) & set(portsB)
-    if (max(len(portsA), len(portsB)) - len(common_ports)) > (max(len(portsA), len(portsB)) / bar_value):
+    if (max(len(portsA), len(portsB)) - len(common_ports)) > bar_value:
         return False
     
     return True
@@ -92,5 +102,9 @@ for group in similar_group_list:
 
     for ports, devices in group:
         print(f"{ports}:{devices}")
+
+#df = pd.DataFrame(similar_group_list, columns=['ports', 'ips']) 
+#df['ips'] = df['ips'].apply(lambda x: ';'.join(x))
+#df.to_excel("similar_ports_devices.xlsx", index=False)
 
 print(len(similar_group_list))
