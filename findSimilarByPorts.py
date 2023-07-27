@@ -2,7 +2,7 @@ import pandas as pd
 
 
 # 读取Excel文件
-df = pd.read_excel('logNyuDorm0-300_Groupby(IP).xlsx')
+df = pd.read_excel('input/logNyuDorm0-300_Groupby(IP).xlsx')
 
 # 以port为key，ip为value
 ports_devices_list = {}
@@ -38,7 +38,6 @@ for item in device_info_list:
     print(item)
 """
 
-
 print("################# Same Ports Devices:")
 
 for ports, devices in ports_devices_list.items():
@@ -48,8 +47,9 @@ for ports, devices in ports_devices_list.items():
             print(device)
         print('---')
 
-df = pd.DataFrame(ports_devices_list) 
-df.to_excel("output.xlsx", index=False)
+df = pd.DataFrame(ports_devices_list.items(), columns=['ports', 'ips']) 
+df['ips'] = df['ips'].apply(lambda x: ';'.join(x))
+df.to_excel("same_ports_devices.xlsx", index=False)
 
 print("################# Similar Ports Devices:")
 
