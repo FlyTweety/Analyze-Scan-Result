@@ -5,15 +5,15 @@ import utils
 class PyNmapWrapper:
 
     def single_scan(ip_port, timeout = None):
-        print("into single for %s", ip_port)
+        print("scan for %s", ip_port)
         nm = nmap.PortScanner()
         ip, port = ip_port
         if timeout:
             nm.scan(ip, str(port), timeout = timeout)
         else:
             nm.scan(ip, port)
-        print(nm.command_line())
-        print(nm[ip])
+        #print(nm.command_line())
+        #print(nm[ip])
         for key, value in nm[ip]['tcp'].items(): #因为只有一个，也就会直接返回唯一的一个
             return (ip, key, value['name'], value['version'])
 
